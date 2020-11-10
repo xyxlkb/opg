@@ -1,17 +1,18 @@
 #include<stdio.h>
 #include<string.h>
 #include<stack>
+#include<iostream>
 using namespace std;
 char ch[6] = {'+', '*', 'i', '(', ')','#'};
 char line[1005];
 stack<int> s1;
 int p[6][6] = {
-    {2,1,1,1,2,2},
-    {2,2,1,1,2,2},
-    {2,2,-1,-1,2,2},
-    {1,1,1,1,0,-1},
-    {2,2,-1,-1,2,2},
-    {1,1,1,1,-1,-1}
+    {1,-1,-1,-1,1,1},
+    {1,1,-1,-1,1,1},
+    {1,1,2,2,1,1},
+    {-1,-1,-1,-1,0,2},
+    {1,1,2,2,1,1},
+    {-1,-1,-1,-1,2,0}
 };
 int def(int c)
 {
@@ -96,15 +97,16 @@ int main(int argc,char* argv[])
 {
     int len = 0;
     char c;
-    char* fname = argv[1];
     FILE* in;
+    // in = stdin;
+    char* fname = argv[1];
     in = fopen(fname,"r");
+    
     while((c=fgetc(in))!=EOF){
         if(c!='\r' && c!='\n') line[len++] = c;
     }
-    line[len++] = '#'; //printf("%s\n",line);
+    line[len++] = '#'; // printf("%s\n",line);
     fclose(in);
     analyse();
  return 0;
 }
-
