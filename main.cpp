@@ -4,7 +4,8 @@
 #include<iostream>
 using namespace std;
 char ch[6] = {'+', '*', 'i', '(', ')','#'};
-char line[1005];
+//char line[1005];
+string line;
 stack<int> st;
 int p[6][6] = {
     {1,-1,-1,-1,1,1},
@@ -15,12 +16,9 @@ int p[6][6] = {
     {-1,-1,-1,-1,2,0}
 };
 int def(int c){
-    if(c=='+') return 0;
-    if(c=='*') return 1;
-    if(c=='i') return 2;
-    if(c=='(') return 3;
-    if(c==')') return 4;
-    if(c=='#') return 5;
+    for(int i=0;i<=5;i++){
+    	if(c==ch[i]) return i;
+	} 
     return 6;
 }
 char getvt(){
@@ -38,7 +36,7 @@ void analyse(){
     st.push('#');
     char rc,lc;
     int a,b,compare;
-    for(int i=0;i<strlen(line);i++){
+    for(int i=0;i<line.length();i++){
         rc=line[i]; 
         if(def(rc)<6){
             lc=getvt(); 
@@ -100,7 +98,7 @@ int main(int argc,char* argv[]){
     while((c=fgetc(in))!=EOF){
         if(c!='\r' && c!='\n') line[len++] = c;
     }
-    line[len++] = '#'; 
+    line+='#'; 
     analyse();
     fclose(in);
     return 0;
