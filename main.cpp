@@ -5,7 +5,7 @@
 using namespace std;
 char ch[6] = {'+', '*', 'i', '(', ')','#'};
 char line[1005];
-stack<int> s1;
+stack<int> st;
 int p[6][6] = {
     {1,-1,-1,-1,1,1},
     {1,1,-1,-1,1,1},
@@ -14,8 +14,7 @@ int p[6][6] = {
     {1,1,2,2,1,1},
     {-1,-1,-1,-1,2,0}
 };
-int def(int c)
-{
+int def(int c){
     if(c=='+') return 0;
     if(c=='*') return 1;
     if(c=='i') return 2;
@@ -24,54 +23,53 @@ int def(int c)
     if(c=='#') return 5;
     return 6;
 }
-char find_lt()
-{
-    char c,ans;
-    c=s1.top();
-    if(def(c)<6)
-        return c;
-    s1.pop();
-    ans=s1.top();
-    s1.push(c);
-    return ans;
+char getvt(){
+    if(def(st.top())<6)
+        return st.top();
+    else{
+    	char c = st.top();
+		st.pop();
+        char t = st.top();
+        st.push(c);
+        return t;
+	}
 }
-void analyse()
-{
-    s1.push('#');
+void analyse(){
+    st.push('#');
     char rc,lc;
     int a,b,compare;
     for(int i=0;i<strlen(line);i++){
-        rc=line[i]; //printf("rc:%c\n",rc);
+        rc=line[i]; 
         if(def(rc)<6){
-            lc=find_lt(); //printf("lc:%c\n",lc);
-            a=def(lc); //printf("a:%d\n",a);
-            b=def(rc); //printf("b:%d\n",b);
+            lc=getvt(); 
+            a=def(lc); 
+            b=def(rc); 
             compare=p[a][b];
             if(compare==2){
                 printf("E\n");
                 return;
             }
             if(compare<=0&&rc!='#'){
-                s1.push(rc);
+                st.push(rc);
                 printf("I%c\n",rc);
             }
             else if(rc=='#'&&lc=='#'){
                 return;
             }
             else{
-                if(lc=='i'){ // ? lc or s1.top()
-                    s1.pop();
-                    s1.push('N');
+                if(lc=='i'){ 
+                    st.pop();
+                    st.push('N');
                 }
                 else{
-                    if(s1.size()>=4){
+                    if(st.size()>=4){
                         char t[4];
-                        t[2]=s1.top(); s1.pop(); 
-                        t[1]=s1.top(); s1.pop(); 
-                        t[0]=s1.top(); s1.pop(); 
+                        t[2]=st.top(); st.pop(); 
+                        t[1]=st.top(); st.pop(); 
+                        t[0]=st.top(); st.pop(); 
                         t[3]='\0';
                         if(strcmp("N+N",t)==0 || strcmp("N*N",t)==0 || strcmp("(N)",t)==0)
-                            s1.push('N');
+                            st.push('N');
                         else{
                             printf("RE\n");
                             return;
@@ -93,20 +91,17 @@ void analyse()
     }
 }
 
-int main(int argc,char* argv[])
-{
+int main(int argc,char* argv[]){
     int len = 0;
     char c;
     FILE* in;
-    // in = stdin;
-    char* fname = argv[1];
-    in = fopen(fname,"r");
-    
+    char* filename = argv[1];
+    in = fopen(filename,"r");
     while((c=fgetc(in))!=EOF){
         if(c!='\r' && c!='\n') line[len++] = c;
     }
-    line[len++] = '#'; // printf("%s\n",line);
-    fclose(in);
+    line[len++] = '#'; 
     analyse();
- return 0;
+    fclose(in);
+    return 0;
 }
